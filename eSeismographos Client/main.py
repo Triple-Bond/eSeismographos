@@ -29,8 +29,8 @@ database = firebase.database()
 starting_time = 0
 
 print("Καλώς ήρθατε στο λογισμικό του eSeismographos.")
-email = input("Εισάγετε το email σας: ")
-password = input("Εισάγετε τον κωδικό σας: ")
+email = input("Εισάγετε το email σας: ").strip()
+password = input("Εισάγετε τον κωδικό σας: ").strip()
 
 
 def hour_passed():
@@ -129,7 +129,7 @@ def initiate_connection(seismographos):
             if serialInst.in_waiting:
                 packet = serialInst.readline()
                 val = float(packet.decode('utf-8'))
-                check_measurement(val, seismographos)
+                #check_measurement(val, seismographos)
                 if hour_passed():
                     auth.refresh(auth.current_user['refreshToken'])
                 data = {'r': val, 'timestamp': time.time()}
@@ -159,10 +159,9 @@ def check_measurement(val, seismographos):
         database.child('announcements').push(announcement)
 
 
-try:
-    auth.sign_in_with_email_and_password(email, password)
-    print("Επιτυχής σύνδεση.")
-    starting_time = time.time()
-    initiate_client()
-except:
-    print("Αποσύνδεση.")
+
+auth.sign_in_with_email_and_password(email, password)
+print("Επιτυχής σύνδεση.")
+starting_time = time.time()
+initiate_client()
+
